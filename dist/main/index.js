@@ -60989,8 +60989,9 @@ async function main() {
     await new Promise((resolve, reject) => {
         docker.modem.followProgress(pullStream, (err, res) => (err ? reject(err) : resolve(res)));
     });
-    await docker.run("docker.io/jaegertracing/all-in-one:1.54", [], process.stdout, {
+    const container = await docker.createContainer({
         name: "jaeger",
+        Image: "docker.io/jaegertracing/all-in-one:1.54",
         User: "0:0",
         Env: [
             "COLLECTOR_OTLP_ENABLED=true",
@@ -61026,6 +61027,7 @@ async function main() {
             ],
         },
     });
+    await container.start();
 }
 main();
 
