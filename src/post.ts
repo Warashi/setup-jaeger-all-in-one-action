@@ -37,7 +37,7 @@ async function main() {
 
   const files = (await glob(`${jaegerDataPath}/**/*`, { withFileTypes: true }))
     .filter((file) => file.isFile())
-    .map((file) => file.path);
+    .map((file) => file.fullpath());
 
   console.log(files);
 
