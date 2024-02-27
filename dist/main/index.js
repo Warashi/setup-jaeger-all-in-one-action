@@ -60982,7 +60982,10 @@ const dockerode_1 = __importDefault(__nccwpck_require__(4571));
 const promises_1 = __importDefault(__nccwpck_require__(3977));
 async function main() {
     const mountPath = `${core.getInput("jaeger-data-path")}/badger`;
-    await promises_1.default.mkdir(mountPath, { recursive: true });
+    await promises_1.default.mkdir(mountPath, {
+        mode: 0o777,
+        recursive: true,
+    });
     const docker = new dockerode_1.default();
     // from https://github.com/apocas/dockerode/issues/647
     const pullStream = await docker.pull("docker.io/jaegertracing/all-in-one:1.54");

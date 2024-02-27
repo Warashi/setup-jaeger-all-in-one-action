@@ -4,7 +4,10 @@ import fs from "node:fs/promises";
 
 async function main() {
   const mountPath = `${core.getInput("jaeger-data-path")}/badger`;
-  await fs.mkdir(mountPath, { recursive: true });
+  await fs.mkdir(mountPath, {
+    mode: 0o777,
+    recursive: true,
+  });
 
   const docker = new Dockerode();
 
