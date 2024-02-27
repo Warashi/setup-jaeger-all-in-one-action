@@ -1,6 +1,7 @@
 import * as core from "@actions/core";
 import Dockerode from "dockerode";
 import fs from "node:fs/promises";
+import process from "node:process";
 
 async function main() {
   const mountPath = `${core.getInput("jaeger-data-path")}/badger`;
@@ -19,10 +20,17 @@ async function main() {
     );
   });
 
+  let uid = 0;
+  let gid = 0;
+  if (process.getuid && process.getgid) {
+    uid = process.getuid();
+    gid = process.getgid();
+  }
+
   const container = await docker.createContainer({
     name: "jaeger",
     Image: "docker.io/jaegertracing/all-in-one:1.54",
-    User: "",
+    User: `${uid}:${gid}`,
     Env: [
       "COLLECTOR_OTLP_ENABLED=true",
       "COLLECTOR_ZIPKIN_HTTP_PORT=:9411",

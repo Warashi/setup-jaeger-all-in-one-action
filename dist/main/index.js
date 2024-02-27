@@ -60980,6 +60980,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const dockerode_1 = __importDefault(__nccwpck_require__(4571));
 const promises_1 = __importDefault(__nccwpck_require__(3977));
+const node_process_1 = __importDefault(__nccwpck_require__(7742));
 async function main() {
     const mountPath = `${core.getInput("jaeger-data-path")}/badger`;
     await promises_1.default.mkdir(mountPath, { recursive: true, mode: 0o777 });
@@ -60989,10 +60990,16 @@ async function main() {
     await new Promise((resolve, reject) => {
         docker.modem.followProgress(pullStream, (err, res) => (err ? reject(err) : resolve(res)));
     });
+    let uid = 0;
+    let gid = 0;
+    if (node_process_1.default.getuid && node_process_1.default.getgid) {
+        uid = node_process_1.default.getuid();
+        gid = node_process_1.default.getgid();
+    }
     const container = await docker.createContainer({
         name: "jaeger",
         Image: "docker.io/jaegertracing/all-in-one:1.54",
-        User: "",
+        User: `${uid}:${gid}`,
         Env: [
             "COLLECTOR_OTLP_ENABLED=true",
             "COLLECTOR_ZIPKIN_HTTP_PORT=:9411",
@@ -61214,6 +61221,14 @@ module.exports = require("node:events");
 
 "use strict";
 module.exports = require("node:fs/promises");
+
+/***/ }),
+
+/***/ 7742:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("node:process");
 
 /***/ }),
 
