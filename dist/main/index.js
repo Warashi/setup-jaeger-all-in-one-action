@@ -60984,8 +60984,7 @@ async function main() {
     const mountPath = `${core.getInput("jaeger-data-path")}/badger`;
     await promises_1.default.mkdir(mountPath, { recursive: true });
     const docker = new dockerode_1.default();
-    await docker.pull("jaegertracing/all-in-one:1.54");
-    const container = await docker.createContainer({
+    await docker.run("jaegertracing/all-in-one:1.54", [], process.stdout, {
         name: "jaeger",
         Image: "jaegertracing/all-in-one:1.54",
         Env: [
@@ -61019,7 +61018,6 @@ async function main() {
             ],
         },
     });
-    await container.start();
 }
 main();
 
