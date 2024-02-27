@@ -22,6 +22,7 @@ async function main() {
   const container = await docker.createContainer({
     name: "jaeger",
     Image: "docker.io/jaegertracing/all-in-one:1.54",
+    User: "",
     Env: [
       "COLLECTOR_OTLP_ENABLED=true",
       "COLLECTOR_ZIPKIN_HTTP_PORT=:9411",
