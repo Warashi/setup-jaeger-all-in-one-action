@@ -60984,7 +60984,12 @@ async function main() {
     const mountPath = `${core.getInput("jaeger-data-path")}/badger`;
     await promises_1.default.mkdir(mountPath, { recursive: true });
     const docker = new dockerode_1.default();
-    await docker.run("jaegertracing/all-in-one:1.54", [], process.stdout, {
+    // from https://github.com/apocas/dockerode/issues/647
+    const pullStream = await docker.pull("docker.io/jaegertracing/all-in-one:1.54");
+    await new Promise((resolve, reject) => {
+        docker.modem.followProgress(pullStream, (err, res) => (err ? reject(err) : resolve(res)));
+    });
+    await docker.run("docker.io/jaegertracing/all-in-one:1.54", [], process.stdout, {
         name: "jaeger",
         Env: [
             "COLLECTOR_OTLP_ENABLED=true",

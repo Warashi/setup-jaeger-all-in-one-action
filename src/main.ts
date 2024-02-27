@@ -7,6 +7,18 @@ async function main() {
   await fs.mkdir(mountPath, { recursive: true });
 
   const docker = new Dockerode();
+
+  // from https://github.com/apocas/dockerode/issues/647
+  const pullStream = await docker.pull(
+    "docker.io/jaegertracing/all-in-one:1.54",
+  );
+  await new Promise((resolve, reject) => {
+    docker.modem.followProgress(
+      pullStream,
+      (err, res) => (err ? reject(err) : resolve(res)),
+    );
+  });
+
   await docker.run(
     "docker.io/jaegertracing/all-in-one:1.54",
     [],
