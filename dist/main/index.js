@@ -61014,14 +61014,14 @@ async function main() {
                 "9411/tcp": [{ HostIp: "0.0.0.0", HostPort: "9411" }],
             },
             Mounts: [
-                {
-                    Target: "/badger",
-                    Source: mountPath,
-                    Type: "bind",
-                    ReadOnly: false,
-                    Consistency: "consistent",
-                    BindOptions: { Propagation: "shared" },
-                },
+            // {
+            //   Target: "/badger",
+            //   Source: mountPath,
+            //   Type: "bind",
+            //   ReadOnly: false,
+            //   Consistency: "consistent",
+            //   BindOptions: { Propagation: "shared" },
+            // },
             ],
         },
     });
