@@ -60,13 +60,9 @@ async function main() {
 
   for (;;) {
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    try {
-      const res = await fetch("http://localhost:14269/");
-      if (res.ok) {
-        break;
-      }
-    } catch {
-      // ignore
+    const res = await fetch("http://localhost:14269/").catch(() => {});
+    if (res?.ok) {
+      break;
     }
   }
 }

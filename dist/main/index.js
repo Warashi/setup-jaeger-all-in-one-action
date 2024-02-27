@@ -61028,8 +61028,8 @@ async function main() {
     await container.start();
     for (;;) {
         await new Promise((resolve) => setTimeout(resolve, 1000));
-        const res = await fetch("http://localhost:14269/");
-        if (res.ok) {
+        const res = await fetch("http://localhost:14269/").catch(() => { });
+        if (res?.ok) {
             break;
         }
     }
