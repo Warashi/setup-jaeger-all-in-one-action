@@ -7,6 +7,7 @@ async function main() {
   await fs.mkdir(mountPath, { recursive: true });
 
   const docker = new Dockerode();
+  await docker.pull("jaegertracing/all-in-one:latest");
   const container = await docker.createContainer({
     name: "jaeger",
     Image: "jaegertracing/all-in-one:latest",
