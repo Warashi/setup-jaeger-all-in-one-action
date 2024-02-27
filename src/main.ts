@@ -79,10 +79,10 @@ async function main() {
       }
       throw e;
     });
-    if (res?.ok) {
-      console.log("waiting for jaeger to start: not ok");
+    if (res?.ok && res.status === 200) {
       break;
     }
+    console.log("waiting for jaeger to start: not ok");
   }
 }
 main();

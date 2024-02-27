@@ -60992,7 +60992,6 @@ async function main() {
     const container = await docker.createContainer({
         name: "jaeger",
         Image: "docker.io/jaegertracing/all-in-one:1.54",
-        User: "0:0",
         Env: [
             "COLLECTOR_OTLP_ENABLED=true",
             "COLLECTOR_ZIPKIN_HTTP_PORT=:9411",
@@ -61048,10 +61047,10 @@ async function main() {
             }
             throw e;
         });
-        if (res?.ok) {
-            console.log("waiting for jaeger to start: not ok");
+        if (res?.ok && res.status === 200) {
             break;
         }
+        console.log("waiting for jaeger to start: not ok");
     }
 }
 main();
