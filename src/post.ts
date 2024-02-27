@@ -35,11 +35,15 @@ async function main() {
     `,
   );
 
-  console.log(await glob(`${jaegerDataPath}/**/*`));
+  const files = (await glob(`${jaegerDataPath}/**/*`, { withFileTypes: true }))
+    .filter((file) => file.isFile())
+    .map((file) => file.path);
+
+  console.log(files);
 
   await artifact.default.uploadArtifact(
     "jaeger",
-    await glob(`${jaegerDataPath}/**/*`),
+    files,
     jaegerDataPath,
   );
 }
