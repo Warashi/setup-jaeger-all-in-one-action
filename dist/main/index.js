@@ -61028,7 +61028,7 @@ async function main() {
     await container.start();
     for (;;) {
         await new Promise((resolve) => setTimeout(resolve, 1000));
-        const res = await fetch("http://localhost:14269/").catch(() => { });
+        const res = await fetch("http://127.0.0.1:14269/").catch(() => { });
         if (res?.ok) {
             break;
         }
