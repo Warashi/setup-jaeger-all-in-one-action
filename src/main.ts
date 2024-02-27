@@ -33,17 +33,17 @@ async function main() {
     ],
     HostConfig: {
       PortBindings: {
-        "5775/udp": [{ HostIp: "0.0.0.0", HostPort: "5775" }],
-        "6831/udp": [{ HostIp: "0.0.0.0", HostPort: "6831" }],
-        "6832/udp": [{ HostIp: "0.0.0.0", HostPort: "6832" }],
-        "5778/tcp": [{ HostIp: "0.0.0.0", HostPort: "5778" }],
-        "16686/tcp": [{ HostIp: "0.0.0.0", HostPort: "16686" }],
-        "14250/tcp": [{ HostIp: "0.0.0.0", HostPort: "14250" }],
-        "14268/tcp": [{ HostIp: "0.0.0.0", HostPort: "14268" }],
-        "14269/tcp": [{ HostIp: "0.0.0.0", HostPort: "14269" }],
-        "4317/tcp": [{ HostIp: "0.0.0.0", HostPort: "4317" }],
-        "4318/tcp": [{ HostIp: "0.0.0.0", HostPort: "4318" }],
-        "9411/tcp": [{ HostIp: "0.0.0.0", HostPort: "9411" }],
+        "5775/udp": [{ HostPort: "5775" }],
+        "6831/udp": [{ HostPort: "6831" }],
+        "6832/udp": [{ HostPort: "6832" }],
+        "5778": [{ HostPort: "5778" }],
+        "16686": [{ HostPort: "16686" }],
+        "14250": [{ HostPort: "14250" }],
+        "14268": [{ HostPort: "14268" }],
+        "14269": [{ HostPort: "14269" }],
+        "4317": [{ HostPort: "4317" }],
+        "4318": [{ HostPort: "4318" }],
+        "9411": [{ HostPort: "9411" }],
       },
       Mounts: [
         {
