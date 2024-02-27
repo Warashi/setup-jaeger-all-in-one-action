@@ -25,7 +25,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup jaeger:all-in-one
-        uses: .
+        uses: ./
 
       - name: Export Workflow Trace
         uses: inception-health/otel-export-trace-action@latest
