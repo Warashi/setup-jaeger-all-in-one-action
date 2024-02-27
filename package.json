@@ -1,0 +1,29 @@
+{
+  "name": "@warashi/setup-jaeger-all-in-one-action",
+  "version": "0.1.0",
+  "description": "",
+  "private": true,
+  "main": "dist/main/index.js",
+  "scripts": {
+    "package": "npm run package:main && npm run package:post",
+    "package:main": "ncc build src/main.ts --out dist/main --license licenses.txt",
+    "package:post": "ncc build src/post.ts --out dist/post --license licenses.txt"
+  },
+  "keywords": [],
+  "author": "Shinnosuke Sawada",
+  "license": "MIT",
+  "devDependencies": {
+    "@tsconfig/node20": "^20.1.2",
+    "@types/dedent": "^0.7.2",
+    "@types/dockerode": "^3.3.24",
+    "@vercel/ncc": "^0.38.1",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@actions/artifact": "^2.1.3",
+    "@actions/core": "^1.10.1",
+    "dedent": "^1.5.1",
+    "dockerode": "^4.0.2",
+    "glob": "^10.3.10"
+  }
+}
