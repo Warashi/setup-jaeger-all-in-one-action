@@ -61029,9 +61029,10 @@ async function main() {
     for (;;) {
         await new Promise((resolve) => setTimeout(resolve, 1000));
         const res = await fetch("http://127.0.0.1:14269/").catch((e) => {
-            if (e.code == "ECONNREFUSED") {
+            if (e.cause?.code === "ECONNREFUSED") {
                 return;
             }
+            console.log(e.cause?.code?.toString());
             throw e;
         });
         if (res?.ok) {
