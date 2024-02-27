@@ -1,0 +1,34 @@
+name: Example Workflow
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run some command
+        run: echo "Hello, world!"
+
+  export-trace:
+    if: always()
+    name: OpenTelemetry Export Trace
+    runs-on: ubuntu-latest
+    needs: [build] # must run when all jobs are complete
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup jaeger:all-in-one
+        uses: .
+
+      - name: Export Workflow Trace
+        uses: inception-health/otel-export-trace-action@latest
+        with:
+          otlpEndpoint: grpc://127.0.0.1:4317/
+          githubToken: ${{ github.token }}
