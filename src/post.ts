@@ -22,7 +22,7 @@ async function main() {
     dedent`
       services:
         jaeger:
-          image: jaegertracing/all-in-one:latest
+          image: jaegertracing/all-in-one:1.54
           ports:
             - "16686:16686"
           environment:

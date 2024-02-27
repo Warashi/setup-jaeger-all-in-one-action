@@ -60984,10 +60984,10 @@ async function main() {
     const mountPath = `${core.getInput("jaeger-data-path")}/badger`;
     await promises_1.default.mkdir(mountPath, { recursive: true });
     const docker = new dockerode_1.default();
-    await docker.pull("jaegertracing/all-in-one:latest");
+    await docker.pull("jaegertracing/all-in-one:1.54");
     const container = await docker.createContainer({
         name: "jaeger",
-        Image: "jaegertracing/all-in-one:latest",
+        Image: "jaegertracing/all-in-one:1.54",
         Env: [
             "COLLECTOR_OTLP_ENABLED=true",
             "COLLECTOR_ZIPKIN_HTTP_PORT=:9411",

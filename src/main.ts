@@ -7,10 +7,10 @@ async function main() {
   await fs.mkdir(mountPath, { recursive: true });
 
   const docker = new Dockerode();
-  await docker.pull("jaegertracing/all-in-one:latest");
+  await docker.pull("jaegertracing/all-in-one:1.54");
   const container = await docker.createContainer({
     name: "jaeger",
-    Image: "jaegertracing/all-in-one:latest",
+    Image: "jaegertracing/all-in-one:1.54",
     Env: [
       "COLLECTOR_OTLP_ENABLED=true",
       "COLLECTOR_ZIPKIN_HTTP_PORT=:9411",
