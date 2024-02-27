@@ -60986,7 +60986,6 @@ async function main() {
     const docker = new dockerode_1.default();
     await docker.run("jaegertracing/all-in-one:1.54", [], process.stdout, {
         name: "jaeger",
-        Image: "jaegertracing/all-in-one:1.54",
         Env: [
             "COLLECTOR_OTLP_ENABLED=true",
             "COLLECTOR_ZIPKIN_HTTP_PORT=:9411",
