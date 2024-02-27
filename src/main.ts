@@ -51,8 +51,6 @@ async function main() {
           Source: mountPath,
           Type: "bind",
           ReadOnly: false,
-          Consistency: "consistent",
-          BindOptions: { Propagation: "shared" },
         },
       ],
     },
