@@ -16,6 +16,7 @@ jobs:
         run: echo "Hello, world!"
 
   export-trace:
+    timeout-minutes: 3
     if: always()
     name: OpenTelemetry Export Trace
     runs-on: ubuntu-latest
