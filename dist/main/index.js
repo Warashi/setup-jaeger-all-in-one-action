@@ -60979,7 +60979,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const dockerode_1 = __importDefault(__nccwpck_require__(4571));
+const promises_1 = __importDefault(__nccwpck_require__(3977));
 async function main() {
+    const mountPath = `${core.getInput("jaeger-data-path")}/badger`;
+    await promises_1.default.mkdir(mountPath, { recursive: true });
     const docker = new dockerode_1.default();
     const container = await docker.createContainer({
         name: "jaeger",
@@ -61009,7 +61012,7 @@ async function main() {
             Mounts: [
                 {
                     Target: "/badger",
-                    Source: `${core.getInput("jaeger-data-path")}/badger`,
+                    Source: mountPath,
                     Type: "bind",
                 },
             ],
@@ -61169,6 +61172,14 @@ module.exports = require("net");
 
 "use strict";
 module.exports = require("node:events");
+
+/***/ }),
+
+/***/ 3977:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("node:fs/promises");
 
 /***/ }),
 

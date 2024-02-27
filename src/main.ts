@@ -1,7 +1,11 @@
 import * as core from "@actions/core";
 import Dockerode from "dockerode";
+import fs from "node:fs/promises";
 
 async function main() {
+  const mountPath = `${core.getInput("jaeger-data-path")}/badger`;
+  await fs.mkdir(mountPath, { recursive: true });
+
   const docker = new Dockerode();
   const container = await docker.createContainer({
     name: "jaeger",
@@ -31,7 +35,7 @@ async function main() {
       Mounts: [
         {
           Target: "/badger",
-          Source: `${core.getInput("jaeger-data-path")}/badger`,
+          Source: mountPath,
           Type: "bind",
         },
       ],
