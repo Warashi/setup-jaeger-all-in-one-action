@@ -35,6 +35,8 @@ async function main() {
     `,
   );
 
+  console.log(await glob(`${jaegerDataPath}/**/*`));
+
   await artifact.default.uploadArtifact(
     "jaeger",
     await glob(`${jaegerDataPath}/**/*`),
