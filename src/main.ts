@@ -8,7 +8,7 @@ async function main() {
 
   const docker = new Dockerode();
   await docker.run(
-    "jaegertracing/all-in-one:1.54",
+    "docker.io/jaegertracing/all-in-one:1.54",
     [],
     process.stdout,
     {
