@@ -60,7 +60,12 @@ async function main() {
 
   for (;;) {
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    const res = await fetch("http://127.0.0.1:14269/").catch(() => {});
+    const res = await fetch("http://127.0.0.1:14269/").catch((e) => {
+      if (e.code === "ECONNREFUSED") {
+        return;
+      }
+      throw e;
+    });
     if (res?.ok) {
       break;
     }
