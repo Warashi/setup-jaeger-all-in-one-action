@@ -1,0 +1,15 @@
+name: "Setup jaeger:all-in-one"
+description: "Setup jaeger:all-in-one and upload collected trace information to GitHub"
+inputs:
+  upload-trace:
+    description: "Upload collected trace information to GitHub"
+    required: true
+    default: "true"
+  jaeger-data-path:
+    description: "Path to the jaeger data directory"
+    required: true
+    default: "${{ runner.temp }}/jaeger"
+runs:
+  using: "node20"
+  main: "dist/main/index.js"
+  post: "dist/post/index.js"
