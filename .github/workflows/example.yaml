@@ -32,4 +32,6 @@ jobs:
         uses: inception-health/otel-export-trace-action@latest
         with:
           otlpEndpoint: grpc://127.0.0.1:4317/
+          otlpHeaders: ''
+          otelServiceName: 'example-workflow'
           githubToken: ${{ github.token }}
