@@ -60991,6 +60991,7 @@ async function main() {
     });
     await docker.run("docker.io/jaegertracing/all-in-one:1.54", [], process.stdout, {
         name: "jaeger",
+        User: "0:0",
         Env: [
             "COLLECTOR_OTLP_ENABLED=true",
             "COLLECTOR_ZIPKIN_HTTP_PORT=:9411",
@@ -61014,14 +61015,14 @@ async function main() {
                 "9411/tcp": [{ HostIp: "0.0.0.0", HostPort: "9411" }],
             },
             Mounts: [
-            // {
-            //   Target: "/badger",
-            //   Source: mountPath,
-            //   Type: "bind",
-            //   ReadOnly: false,
-            //   Consistency: "consistent",
-            //   BindOptions: { Propagation: "shared" },
-            // },
+                {
+                    Target: "/badger",
+                    Source: mountPath,
+                    Type: "bind",
+                    ReadOnly: false,
+                    Consistency: "consistent",
+                    BindOptions: { Propagation: "shared" },
+                },
             ],
         },
     });
