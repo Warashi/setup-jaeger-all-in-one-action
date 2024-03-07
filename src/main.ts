@@ -9,6 +9,8 @@ async function main() {
   const tempDir = `${process.env.RUNNER_TEMP || os.tmpdir()}/jaeger-all-in-one`;
   await io.mkdirP(tempDir);
 
+  core.debug(`tempDir: ${tempDir}`);
+
   const jaegerVersion = core.getInput("jaeger-version");
   const jaegerUrl =
     `https://github.com/jaegertracing/jaeger/releases/download/v${jaegerVersion}/jaeger-${jaegerVersion}-linux-amd64.tar.gz`;
@@ -18,6 +20,8 @@ async function main() {
     `${tempDir}/jaeger-tar`,
   );
   core.addPath(`${jaegerExtractedFolder}/jaeger-${jaegerVersion}-linux-amd64`);
+
+  core.debug(`jaegerPath: ${jaegerPath}`);
 
   const child_process = spawn("jaeger-all-in-one", {
     stdio: "ignore",
@@ -34,8 +38,10 @@ async function main() {
   });
   core.saveState("jaeger-process", child_process.pid);
   child_process.unref();
+  core.debug(`jaeger-process: ${child_process.pid}`);
 
   core.saveState("jaeger-data-path", `${tempDir}/jaeger`);
+  core.debug(`jaeger-data-path: ${tempDir}/jaeger`);
 
   for (;;) {
     await new Promise((resolve) => setTimeout(resolve, 1000));
