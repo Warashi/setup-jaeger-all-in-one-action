@@ -26,6 +26,7 @@ async function main() {
       COLLECTOR_OTLP_ENABLED: "true",
       COLLECTOR_ZIPKIN_HTTP_PORT: ":9411",
       SPAN_STORAGE_TYPE: "badger",
+      BADGER_CONSISTENCY: "true",
       BADGER_EPHEMERAL: "false",
       BADGER_DIRECTORY_VALUE: `${tempDir}/jaeger/badger/data`,
       BADGER_DIRECTORY_KEY: `${tempDir}/jaeger/badger/key`,

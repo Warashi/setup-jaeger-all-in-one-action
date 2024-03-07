@@ -33,6 +33,7 @@ async function main() {
             - "BADGER_EPHEMERAL=false"
             - "BADGER_DIRECTORY_VALUE=/badger/data"
             - "BADGER_DIRECTORY_KEY=/badger/key"
+            - "BADGER_READ_ONLY=true"
           volumes:
             - ./badger:/badger
     `,
