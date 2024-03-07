@@ -5,8 +5,6 @@ import * as fs from "node:fs/promises";
 import dedent from "dedent";
 
 async function main() {
-  const jaegerDataPath = core.getInput("jaeger-data-path");
-
   const pid = core.getState("jaeger-process");
   if (!pid) {
     throw new Error("jaeger process not found");
@@ -15,6 +13,11 @@ async function main() {
 
   if (!core.getBooleanInput("upload-trace")) {
     return;
+  }
+
+  const jaegerDataPath = core.getState("jaeger-data-path") as string;
+  if (!jaegerDataPath) {
+    throw new Error("jaeger data path not found");
   }
 
   fs.writeFile(

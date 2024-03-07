@@ -22,9 +22,19 @@ async function main() {
   const child_process = spawn("jaeger-all-in-one", {
     stdio: "ignore",
     detached: true,
+    env: {
+      COLLECTOR_OTLP_ENABLED: "true",
+      COLLECTOR_ZIPKIN_HTTP_PORT: ":9411",
+      SPAN_STORAGE_TYPE: "badger",
+      BADGER_EPHEMERAL: "false",
+      BADGER_DIRECTORY_VALUE: `${tempDir}/jaeger/badger/data`,
+      BADGER_DIRECTORY_KEY: `${tempDir}/jaeger/badger/key`,
+    },
   });
   core.saveState("jaeger-process", child_process.pid);
   child_process.unref();
+
+  core.saveState("jaeger-data-path", `${tempDir}/jaeger`);
 
   for (;;) {
     await new Promise((resolve) => setTimeout(resolve, 1000));
