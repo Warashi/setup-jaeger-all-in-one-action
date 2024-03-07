@@ -5,10 +5,10 @@ inputs:
     description: "Upload collected trace information to GitHub"
     required: true
     default: "true"
-  jaeger-data-path:
+  jaeger-version:
     description: "Path to the jaeger data directory"
     required: true
-    default: "${{ runner.temp }}/jaeger"
+    default: "1.55.0"
 runs:
   using: "node20"
   main: "dist/main/index.js"
