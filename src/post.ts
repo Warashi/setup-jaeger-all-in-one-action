@@ -1,17 +1,17 @@
 import * as core from "@actions/core";
 import * as artifact from "@actions/artifact";
-import { glob } from "glob";
-import Dockerode from "dockerode";
-import fs from "node:fs/promises";
+import * as glob from "@actions/glob";
+import * as fs from "node:fs/promises";
 import dedent from "dedent";
 
 async function main() {
   const jaegerDataPath = core.getInput("jaeger-data-path");
 
-  const docker = new Dockerode();
-  const container = await docker.getContainer("jaeger");
-  await container.stop();
-  await container.remove();
+  const pid = core.getState("jaeger-process");
+  if (!pid) {
+    throw new Error("jaeger process not found");
+  }
+  process.kill(Number(pid), "SIGINT");
 
   if (!core.getBooleanInput("upload-trace")) {
     return;
@@ -35,9 +35,11 @@ async function main() {
     `,
   );
 
-  const files = (await glob(`${jaegerDataPath}/**/*`, { withFileTypes: true }))
-    .filter((file) => file.isFile())
-    .map((file) => file.fullpath());
+  const globber = await glob.create(`${jaegerDataPath}/**/*`, {
+    followSymbolicLinks: true,
+    matchDirectories: false,
+  });
+  const files = await globber.glob();
 
   console.log(files);
 

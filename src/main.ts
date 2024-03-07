@@ -1,90 +1,36 @@
 import * as core from "@actions/core";
-import Dockerode from "dockerode";
-import fs from "node:fs/promises";
-import process from "node:process";
+import * as io from "@actions/io";
+import * as tc from "@actions/tool-cache";
+import { spawn } from "node:child_process";
+import * as process from "node:process";
+import * as os from "node:os";
 
 async function main() {
-  const mountPath = `${core.getInput("jaeger-data-path")}/badger`;
-  await fs.mkdir(mountPath, { recursive: true, mode: 0o777 });
+  const tempDir = `${process.env.RUNNER_TEMP || os.tmpdir()}/jaeger-all-in-one`;
+  await io.mkdirP(tempDir);
 
-  const docker = new Dockerode();
-
-  // from https://github.com/apocas/dockerode/issues/647
-  const pullStream = await docker.pull(
-    "docker.io/jaegertracing/all-in-one:1.54",
+  const jaegerVersion = core.getInput("jaeger-version");
+  const jaegerUrl =
+    `https://github.com/jaegertracing/jaeger/releases/download/v${jaegerVersion}/jaeger-${jaegerVersion}-linux-amd64.tar.gz`;
+  const jaegerPath = await tc.downloadTool(jaegerUrl);
+  const jaegerExtractedFolder = await tc.extractTar(
+    jaegerPath,
+    `${tempDir}/jaeger-tar`,
   );
-  await new Promise((resolve, reject) => {
-    docker.modem.followProgress(
-      pullStream,
-      (err, res) => (err ? reject(err) : resolve(res)),
-    );
+  core.addPath(`${jaegerExtractedFolder}/jaeger-${jaegerVersion}-linux-amd64`);
+
+  const child_process = spawn("jaeger-all-in-one", {
+    stdio: "ignore",
+    detached: true,
   });
-
-  let uid = 0;
-  let gid = 0;
-  if (process.getuid && process.getgid) {
-    uid = process.getuid();
-    gid = process.getgid();
-  }
-
-  const container = await docker.createContainer({
-    name: "jaeger",
-    Image: "docker.io/jaegertracing/all-in-one:1.54",
-    User: `${uid}:${gid}`,
-    Env: [
-      "COLLECTOR_OTLP_ENABLED=true",
-      "COLLECTOR_ZIPKIN_HTTP_PORT=:9411",
-      "SPAN_STORAGE_TYPE=badger",
-      "BADGER_EPHEMERAL=false",
-      "BADGER_DIRECTORY_VALUE=/badger/data",
-      "BADGER_DIRECTORY_KEY=/badger/key",
-    ],
-    ExposedPorts: {
-      "5775/udp": {},
-      "6831/udp": {},
-      "6832/udp": {},
-      "5778/tcp": {},
-      "16686/tcp": {},
-      "14250/tcp": {},
-      "14268/tcp": {},
-      "14269/tcp": {},
-      "4317/tcp": {},
-      "4318/tcp": {},
-      "9411/tcp": {},
-    },
-    HostConfig: {
-      PortBindings: {
-        "5775/udp": [{ HostPort: "5775" }],
-        "6831/udp": [{ HostPort: "6831" }],
-        "6832/udp": [{ HostPort: "6832" }],
-        "5778/tcp": [{ HostPort: "5778" }],
-        "16686/tcp": [{ HostPort: "16686" }],
-        "14250/tcp": [{ HostPort: "14250" }],
-        "14268/tcp": [{ HostPort: "14268" }],
-        "14269/tcp": [{ HostPort: "14269" }],
-        "4317/tcp": [{ HostPort: "4317" }],
-        "4318/tcp": [{ HostPort: "4318" }],
-        "9411/tcp": [{ HostPort: "9411" }],
-      },
-      Mounts: [
-        {
-          Target: "/badger",
-          Source: mountPath,
-          Type: "bind",
-          ReadOnly: false,
-        },
-      ],
-    },
-  });
-
-  await container.start();
+  core.saveState("jaeger-process", child_process.pid);
+  child_process.unref();
 
   for (;;) {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     const res = await fetch("http://127.0.0.1:14269/").catch((e) => {
       if (e.cause?.code === "ECONNREFUSED") {
-        console.log("waiting for jaeger to start: connection refused");
-        return;
+        return { ok: false, status: 500 };
       }
       throw e;
     });
