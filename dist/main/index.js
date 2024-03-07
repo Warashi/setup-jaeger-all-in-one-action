@@ -28606,9 +28606,9 @@ async function main() {
     const jaegerUrl = `https://github.com/jaegertracing/jaeger/releases/download/v${jaegerVersion}/jaeger-${jaegerVersion}-linux-amd64.tar.gz`;
     const jaegerPath = await tc.downloadTool(jaegerUrl);
     const jaegerExtractedFolder = await tc.extractTar(jaegerPath, `${tempDir}/jaeger-tar`);
-    core.addPath(`${jaegerExtractedFolder}/jaeger-${jaegerVersion}-linux-amd64`);
+    const jaegerExecutable = `${jaegerExtractedFolder}/jaeger-${jaegerVersion}-linux-amd64/jaeger-all-in-one`;
     core.debug(`jaegerPath: ${jaegerPath}`);
-    const child_process = (0, node_child_process_1.spawn)("jaeger-all-in-one", {
+    const child_process = (0, node_child_process_1.spawn)(jaegerExecutable, {
         stdio: "ignore",
         detached: true,
         env: {

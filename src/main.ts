@@ -19,11 +19,12 @@ async function main() {
     jaegerPath,
     `${tempDir}/jaeger-tar`,
   );
-  core.addPath(`${jaegerExtractedFolder}/jaeger-${jaegerVersion}-linux-amd64`);
+  const jaegerExecutable =
+    `${jaegerExtractedFolder}/jaeger-${jaegerVersion}-linux-amd64/jaeger-all-in-one`;
 
   core.debug(`jaegerPath: ${jaegerPath}`);
 
-  const child_process = spawn("jaeger-all-in-one", {
+  const child_process = spawn(jaegerExecutable, {
     stdio: "ignore",
     detached: true,
     env: {
